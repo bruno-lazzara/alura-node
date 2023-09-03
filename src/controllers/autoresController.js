@@ -40,11 +40,13 @@ class AutorController {
         try {
             const id = req.params.id;
 
-            // If 'await' is not used here, the success message will be displayed before the findByIdAndUpdate operation even finishes.
-            // We must wait for the operation to finish, so it can continue to the status 200, or cath the error.
-            await autores.findByIdAndUpdate(id, { $set: req.body });
+            const autorAtualizar = await autores.findByIdAndUpdate(id, { $set: req.body });
 
-            res.status(200).send({ message: 'Autor atualizado com sucesso' });
+            if (autorAtualizar !== null) {
+                res.status(200).send({ message: 'Autor atualizado com sucesso' });
+            } else {
+                next(new NaoEncontrado('Autor não encontrado.'));
+            }
         } catch (err) {
             next(err);
         }
@@ -54,10 +56,13 @@ class AutorController {
         try {
             const id = req.params.id;
 
-            // 'await' is used the same way as in findByIdAndUpdate
-            await autores.findByIdAndDelete(id);
+            const autorExcluir = await autores.findByIdAndDelete(id);
 
-            res.status(200).send({ message: 'Autor excluido com sucesso' });
+            if (autorExcluir !== null) {
+                res.status(200).send({ message: 'Autor excluido com sucesso' });
+            } else {
+                next(new NaoEncontrado('Autor não encontrado.'));
+            }
         } catch (err) {
             next(err);
         }
