@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import autores from '../models/Autor.js';
 
 class AutorController {
@@ -14,9 +15,19 @@ class AutorController {
         try {
             const id = req.params.id;
             const autor = await autores.findById(id);
-            res.status(200).send(autor);
+
+            if (autor !== null) {
+                res.status(200).send(autor);
+            } else {
+                res.status(404).send({ message: 'Autor não encontrado.' });
+            }
+
         } catch (err) {
-            res.status(404).send({ message: `${err.message} - autor não encontrado.` });
+            if (err instanceof mongoose.Error.CastError) {
+                res.status(400).send({ message: 'Um ou mais dados fornecidos estão incorretos.' });
+            } else {
+                res.status(500).send({ message: 'Erro interno do servidor' });
+            }
         }
     };
 
@@ -47,13 +58,13 @@ class AutorController {
     static excluirAutor = async (req, res) => {
         try {
             const id = req.params.id;
-    
+
             // 'await' is used the same way as in findByIdAndUpdate
             await autores.findByIdAndDelete(id);
 
             res.status(200).send({ message: 'Autor excluido com sucesso' });
         } catch (err) {
-            res.status(500).send({ message: `${err.message} - falha ao excluir autor.` });            
+            res.status(500).send({ message: `${err.message} - falha ao excluir autor.` });
         }
     };
 }
