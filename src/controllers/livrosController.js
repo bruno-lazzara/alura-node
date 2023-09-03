@@ -1,17 +1,17 @@
 import livros from '../models/Livro.js';
 
 class LivroController {
-    static listarLivros = async (req, res) => {
+    static listarLivros = async (req, res, next) => {
         try {
             const livrosResultado = await livros.find().populate('autor').exec();
 
             res.status(200).json(livrosResultado);
         } catch (err) {
-            res.status(500).json({ message: 'Erro interno no servidor' });
+            next(err);
         }
     };
 
-    static listarLivroPorId = async (req, res) => {
+    static listarLivroPorId = async (req, res, next) => {
         try {
             const id = req.params.id;
 
@@ -19,11 +19,11 @@ class LivroController {
 
             res.status(200).send(livro);
         } catch (err) {
-            res.status(404).send({ message: `${err.message} - livro não encontrado.` });
+            next(err);
         }
     };
 
-    static listarLivroPorEditora = async (req, res) => {
+    static listarLivroPorEditora = async (req, res, next) => {
         try {
             const editora = req.query.editora;
 
@@ -31,11 +31,11 @@ class LivroController {
 
             res.status(200).send(livrosResultado);
         } catch (err) {
-            res.status(500).json({ message: 'Erro interno no servidor' });
+            next(err);
         }
     };
 
-    static cadastrarLivro = async (req, res) => {
+    static cadastrarLivro = async (req, res, next) => {
         try {
             let livro = new livros(req.body);
 
@@ -43,11 +43,11 @@ class LivroController {
 
             res.status(201).send(livro.toJSON());
         } catch (err) {
-            res.status(500).send({ message: `${err.message} - falha ao cadastrar livro.` });
+            next(err);
         }
     };
 
-    static atualizarLivro = async (req, res) => {
+    static atualizarLivro = async (req, res, next) => {
         try {
             const id = req.params.id;
 
@@ -55,11 +55,11 @@ class LivroController {
 
             res.status(200).send({ message: 'Livro atualizado com sucesso' });
         } catch (err) {
-            res.status(500).send({ message: `${err.message} - falha ao atualizar livro.` });
+            next(err);
         }
     };
 
-    static excluirLivro = async (req, res) => {
+    static excluirLivro = async (req, res, next) => {
         try {
             const id = req.params.id;
 
@@ -67,7 +67,7 @@ class LivroController {
 
             res.status(200).send({ message: 'Livro excluido com sucesso' });
         } catch (err) {
-            res.status(500).send({ message: `${err.message} - falha ao excluir livro.` });
+            next(err);
         }
     };
 }

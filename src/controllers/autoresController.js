@@ -1,17 +1,16 @@
-import mongoose from 'mongoose';
 import autores from '../models/Autor.js';
 
 class AutorController {
-    static listarAutores = async (req, res) => {
+    static listarAutores = async (req, res, next) => {
         try {
             const autoresResultado = await autores.find();
             res.status(200).json(autoresResultado);
         } catch (err) {
-            res.status(500).json({ message: 'Erro interno no servidor' });
+            next(err);
         }
     };
 
-    static listarAutorPorId = async (req, res) => {
+    static listarAutorPorId = async (req, res, next) => {
         try {
             const id = req.params.id;
             const autor = await autores.findById(id);
@@ -21,27 +20,22 @@ class AutorController {
             } else {
                 res.status(404).send({ message: 'Autor não encontrado.' });
             }
-
         } catch (err) {
-            if (err instanceof mongoose.Error.CastError) {
-                res.status(400).send({ message: 'Um ou mais dados fornecidos estão incorretos.' });
-            } else {
-                res.status(500).send({ message: 'Erro interno do servidor' });
-            }
+            next(err);
         }
     };
 
-    static cadastrarAutor = async (req, res) => {
+    static cadastrarAutor = async (req, res, next) => {
         try {
             let autor = new autores(req.body);
             const resultado = await autor.save();
             res.status(201).send(resultado.toJSON());
         } catch (err) {
-            res.status(500).send({ message: `${err.message} - falha ao cadastrar autor.` });
+            next(err);
         }
     };
 
-    static atualizarAutor = async (req, res) => {
+    static atualizarAutor = async (req, res, next) => {
         try {
             const id = req.params.id;
 
@@ -51,11 +45,11 @@ class AutorController {
 
             res.status(200).send({ message: 'Autor atualizado com sucesso' });
         } catch (err) {
-            res.status(500).send({ message: `${err.message} - falha ao atualizar autor.` });
+            next(err);
         }
     };
 
-    static excluirAutor = async (req, res) => {
+    static excluirAutor = async (req, res, next) => {
         try {
             const id = req.params.id;
 
@@ -64,7 +58,7 @@ class AutorController {
 
             res.status(200).send({ message: 'Autor excluido com sucesso' });
         } catch (err) {
-            res.status(500).send({ message: `${err.message} - falha ao excluir autor.` });
+            next(err);
         }
     };
 }
