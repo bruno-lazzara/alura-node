@@ -1,11 +1,11 @@
-import autores from "../models/Autor.js";
+import autores from '../models/Autor.js';
 
 class AutorController {
     static listarAutores = (req, res) => {
         autores.find((err, autores) => {
             res.status(200).json(autores);
         });
-    }
+    };
 
     static listarAutorPorId = (req, res) => {
         const id = req.params.id;
@@ -16,8 +16,8 @@ class AutorController {
             } else {
                 res.status(200).send(autores);
             }
-        })
-    }
+        });
+    };
 
     static cadastrarAutor = (req, res) => {
         let autor = new autores(req.body);
@@ -29,7 +29,7 @@ class AutorController {
                 res.status(201).send(autor.toJSON());
             }
         });
-    }
+    };
 
     static atualizarAutor = (req, res) => {
         const id = req.params.id;
@@ -41,7 +41,7 @@ class AutorController {
                 res.status(500).send({ message: `${err.message} - falha ao atualizar autor.` });
             }
         });
-    }
+    };
 
     static excluirAutor = (req, res) => {
         const id = req.params.id;
@@ -52,8 +52,8 @@ class AutorController {
             } else {
                 res.status(200).send({ message: 'Autor excluido com sucesso' });
             }
-        })
-    }
+        });
+    };
 }
 
-export default AutorController
+export default AutorController;

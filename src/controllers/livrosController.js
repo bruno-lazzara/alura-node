@@ -1,4 +1,4 @@
-import livros from "../models/Livro.js";
+import livros from '../models/Livro.js';
 
 class LivroController {
     static listarLivros = (req, res) => {
@@ -8,7 +8,7 @@ class LivroController {
             .exec((err, livros) => {
                 res.status(200).json(livros);
             });
-    }
+    };
 
     static listarLivroPorId = (req, res) => {
         const id = req.params.id;
@@ -22,8 +22,8 @@ class LivroController {
                 } else {
                     res.status(200).send(livros);
                 }
-            })
-    }
+            });
+    };
 
     static cadastrarLivro = (req, res) => {
         let livro = new livros(req.body);
@@ -35,7 +35,7 @@ class LivroController {
                 res.status(201).send(livro.toJSON());
             }
         });
-    }
+    };
 
     static atualizarLivro = (req, res) => {
         const id = req.params.id;
@@ -47,7 +47,7 @@ class LivroController {
                 res.status(500).send({ message: `${err.message} - falha ao atualizar livro.` });
             }
         });
-    }
+    };
 
     static excluirLivro = (req, res) => {
         const id = req.params.id;
@@ -58,8 +58,8 @@ class LivroController {
             } else {
                 res.status(200).send({ message: 'Livro excluido com sucesso' });
             }
-        })
-    }
+        });
+    };
 
     static listarLivroPorEditora = (req, res) => {
         const editora = req.query.editora;
@@ -70,8 +70,8 @@ class LivroController {
             } else {
                 res.status(200).send(livros);
             }
-        })
-    }
+        });
+    };
 }
 
-export default LivroController
+export default LivroController;
